@@ -3,7 +3,7 @@ A [Giter8][g8] template for [zio-pravega](https://cheleb.github.io/zio-pravega/)
 # Usage
 
 ```bash
-sbt new cheleb/zio-pravega-starter
+sbt new cheleb/zio-pravega-starter.g8
 ```
 
 
