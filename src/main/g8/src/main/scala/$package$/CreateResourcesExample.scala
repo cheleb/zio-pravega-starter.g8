@@ -2,6 +2,7 @@ package $package$
 
 import zio._
 import zio.pravega._
+import zio.pravega.admin._
 
 import io.pravega.client.tables.KeyValueTableConfiguration
 import io.pravega.client.stream.StreamConfiguration
@@ -14,19 +15,19 @@ object CreateResourcesExample extends ZIOAppDefault {
     .build
 
   val tableConfig = KeyValueTableConfiguration
-      .builder()
-      .partitionCount(2)
-      .primaryKeyLength(4)
-      .build()
+    .builder()
+    .partitionCount(2)
+    .primaryKeyLength(4)
+    .build()
 
   private val program = for {
-    _ <- PravegaAdmin.createScope("a-scope")
-    _ <- PravegaAdmin.createStream(
+    _ <- PravegaStreamManager.createScope("a-scope")
+    _ <- PravegaStreamManager.createStream(
       "a-scope",
       "a-stream",
       streamConfiguration
     )
-    _ <- PravegaAdmin.createTable(
+    _ <- PravegaTableManager.createTable(
       "a-scope",
       "a-table",
       tableConfig
@@ -37,7 +38,9 @@ object CreateResourcesExample extends ZIOAppDefault {
     program
       .provide(
         Scope.default,
-        PravegaAdmin.live(PravegaClientConfig.default)
+        PravegaClientConfig.live,
+        PravegaStreamManager.live,
+        PravegaTableManager.live
       )
 
 }

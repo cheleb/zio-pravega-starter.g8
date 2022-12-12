@@ -4,6 +4,8 @@ import zio._
 import zio.pravega._
 
 import io.pravega.client.stream.impl.UTF8StringSerializer
+import zio.pravega.admin.PravegaStreamManager
+import zio.pravega.admin.PravegaReaderGroupManager
 
 object StreamReadExample extends ZIOAppDefault {
 
@@ -12,12 +14,11 @@ object StreamReadExample extends ZIOAppDefault {
       .withSerializer(new UTF8StringSerializer)
 
   private val program = for {
-    _ <- PravegaAdmin.createReaderGroup(
-      "a-scope",
+    _ <- PravegaReaderGroupManager.createReaderGroup(
       "a-reader-group",
       "a-stream"
     )
-    stream <- PravegaStream.stream(
+    stream = PravegaStream.stream(
       "a-reader-group",
       stringReaderSettings
     )
@@ -31,7 +32,8 @@ object StreamReadExample extends ZIOAppDefault {
   override def run: ZIO[Environment with ZIOAppArgs with Scope, Any, Any] =
     program.provide(
       Scope.default,
-      PravegaAdmin.live(PravegaClientConfig.default),
+      PravegaClientConfig.live,
+      PravegaReaderGroupManager.live("a-scope"),
       PravegaStream.fromScope(
         "a-scope",
         PravegaClientConfig.default
