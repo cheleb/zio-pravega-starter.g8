@@ -21,17 +21,26 @@ object CreateResourcesExample extends ZIOAppDefault {
     .build()
 
   private val program = for {
-    _ <- PravegaStreamManager.createScope("a-scope")
-    _ <- PravegaStreamManager.createStream(
+    scopeCreated <- PravegaStreamManager.createScope("a-scope")
+
+    _ <- ZIO.logInfo(s"Scope created $scopeCreated")
+
+    streamCreated <- PravegaStreamManager.createStream(
       "a-scope",
       "a-stream",
       streamConfiguration
     )
-    _ <- PravegaTableManager.createTable(
+
+    _ <- ZIO.logInfo(s"Stream created: $streamCreated")
+
+    tableCreated <- PravegaTableManager.createTable(
       "a-scope",
       "a-table",
       tableConfig
     )
+
+    _ <- ZIO.logInfo(s"Table created: $tableCreated")
+
   } yield ()
 
   override def run: ZIO[Any, Throwable, Unit] =
