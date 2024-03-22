@@ -1,8 +1,8 @@
 package $package$
 
-import zio._
-import zio.pravega._
-import zio.pravega.admin._
+import zio.*
+import zio.pravega.*
+import zio.pravega.admin.*
 
 import io.pravega.client.tables.KeyValueTableConfiguration
 import io.pravega.client.stream.StreamConfiguration
@@ -23,7 +23,7 @@ object CreateResourcesExample extends ZIOAppDefault {
   private val program = for {
     scopeCreated <- PravegaStreamManager.createScope("a-scope")
 
-    _ <- ZIO.logInfo(s"Scope created $scopeCreated")
+    _ <- ZIO.logInfo(s"Scope created \$scopeCreated")
 
     streamCreated <- PravegaStreamManager.createStream(
       "a-scope",
@@ -31,7 +31,7 @@ object CreateResourcesExample extends ZIOAppDefault {
       streamConfiguration
     )
 
-    _ <- ZIO.logInfo(s"Stream created: $streamCreated")
+    _ <- ZIO.logInfo(s"Stream created: \$streamCreated")
 
     tableCreated <- PravegaTableManager.createTable(
       "a-scope",
@@ -39,11 +39,11 @@ object CreateResourcesExample extends ZIOAppDefault {
       tableConfig
     )
 
-    _ <- ZIO.logInfo(s"Table created: $tableCreated")
+    _ <- ZIO.logInfo(s"Table created: \$tableCreated")
 
   } yield ()
 
-  override def run: ZIO[Any, Throwable, Unit] =
+  override def run =
     program
       .provide(
         Scope.default,

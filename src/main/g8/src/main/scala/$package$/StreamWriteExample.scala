@@ -1,8 +1,8 @@
 package $package$
 
-import zio._
-import zio.pravega._
-import zio.stream._
+import zio.*
+import zio.pravega.*
+import zio.stream.*
 
 import io.pravega.client.stream.impl.UTF8StringSerializer
 
@@ -32,7 +32,7 @@ object StreamWriteExample extends ZIOAppDefault {
 
   } yield ()
 
-  override def run: ZIO[Environment with ZIOAppArgs with Scope, Any, Any] =
+  override def run =
     program.provide(
       Scope.default,
       PravegaStream.fromScope("a-scope", clientConfig)
