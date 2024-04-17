@@ -12,4 +12,4 @@ lazy val root = (project in file(".")).settings(
 )
 
 libraryDependencies += "dev.cheleb" %% "zio-pravega" % "$zioPravegaVersion$"
-libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.5.3"
+libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.5.6"
