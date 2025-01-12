@@ -8,9 +8,17 @@ import io.pravega.client.tables.KeyValueTableConfiguration
 import io.pravega.client.stream.StreamConfiguration
 import io.pravega.client.stream.ScalingPolicy
 
-object CreateResourcesExample extends ZIOAppDefault {
+import zio.*
+import zio.pravega.*
+import zio.pravega.admin.*
 
-  private val streamConfiguration = StreamConfiguration.builder
+import io.pravega.client.tables.KeyValueTableConfiguration
+import io.pravega.client.stream.StreamConfiguration
+import io.pravega.client.stream.ScalingPolicy
+
+object CreateResourcesExample extends ZIOAppDefault:
+
+  val streamConfiguration = StreamConfiguration.builder
     .scalingPolicy(ScalingPolicy.fixed(8))
     .build
 
@@ -20,28 +28,20 @@ object CreateResourcesExample extends ZIOAppDefault {
     .primaryKeyLength(4)
     .build()
 
-  private val program = for {
-    scopeCreated <- PravegaStreamManager.createScope("a-scope")
+  // Main program
+  private val program = for
+    scopeCreated <- PravegaStreamManager.createScope("$demoScope$")
 
     _ <- ZIO.logInfo(s"Scope created \$scopeCreated")
 
-    streamCreated <- PravegaStreamManager.createStream(
-      "a-scope",
-      "a-stream",
-      streamConfiguration
-    )
+    streamCreated <- PravegaStreamManager.createStream("$demoScope$", "$demoStream$", streamConfiguration)
 
     _ <- ZIO.logInfo(s"Stream created: \$streamCreated")
 
-    tableCreated <- PravegaTableManager.createTable(
-      "a-scope",
-      "a-table",
-      tableConfig
-    )
+    tableCreated <- PravegaTableManager.createTable("$demoScope$", "$demoTable$", tableConfig)
 
     _ <- ZIO.logInfo(s"Table created: \$tableCreated")
-
-  } yield ()
+  yield ()
 
   override def run =
     program
@@ -51,5 +51,3 @@ object CreateResourcesExample extends ZIOAppDefault {
         PravegaStreamManager.live,
         PravegaTableManager.live
       )
-
-}
